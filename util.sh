@@ -1,6 +1,24 @@
 #!/usr/bin/bash
 # Some handy functions.
 
+function join_arguments_www_form() {
+    local arguments="$@"
+    local ans=""
+
+    for arg in $arguments
+    do
+        if [[ -z "$ans" ]]; then
+            ans="$arg"
+        else
+            ans="$ans&$arg"
+        fi
+    done
+
+    echo $ans
+    return 0
+}
+
+
 # If parameter is not found in `.env`,
 # fallback to default value
 function init_parameter() {
