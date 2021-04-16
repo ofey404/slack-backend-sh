@@ -10,11 +10,11 @@ function slack_users_list_wrapper() {
     local api_token="$1"
     local optional_arguments="${@:2}"
 
-    local data=$(join_arguments_www_form "token=$API_TOKEN" "$optional_arguments")
+    local data=$(join_arguments_www_form "token=$api_token" "$optional_arguments")
 
     while :
     do
-        resp=$(curl -X GET -H "Authorization: Bearer $api_token" \
+        resp=$(curl --silent -X GET -H "Authorization: Bearer $api_token" \
              -H "Content-type: application/x-www-form-urlencoded" \
              --data "$data"\
              https://slack.com/api/users.list)

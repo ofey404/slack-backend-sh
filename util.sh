@@ -41,3 +41,12 @@ function init_parameter() {
 }
 
 
+function all_channel_id_from_list_file() {
+    local list_file_path=$1
+    for i in $(cat $list_file_path | jq '.channels[].id')
+    do
+        echo "$i" | sed -e 's/^"//' -e 's/"$//'
+    done
+    return 0
+}
+
