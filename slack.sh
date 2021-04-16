@@ -19,6 +19,18 @@ function join_arguments_www_form() {
 }
 
 
+# conversation.list
+# https://api.slack.com/methods/conversations.list
+
+function all_channel_id_from_list_file() {
+    local list_file_path=$1
+    for i in $(cat $list_file_path | jq '.channels[].id')
+    do
+        echo "$i" | sed -e 's/^"//' -e 's/"$//'
+    done
+    return 0
+}
+
 function slack_conversation_list_wrapper() {
     local api_token="$1"
     local optional_arguments="${@:2}"
@@ -46,3 +58,8 @@ function slack_conversation_list_wrapper() {
     echo "$resp"
     return 0
 }
+
+
+# users.list
+# https://api.slack.com/methods/users.list
+# TODO

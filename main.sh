@@ -13,12 +13,8 @@ SAVE_PATH=$(init_parameter SAVE_PATH ./data)
 
 mkdir -p $SAVE_PATH
 
-SAVE_PATH_LIST="$SAVE_PATH/list.json"
+LIST_FILE_PATH="$SAVE_PATH/list.json"
 
-slack_conversation_list_wrapper $API_TOKEN | jq > $SAVE_PATH_LIST
+slack_conversation_list_wrapper $API_TOKEN | jq > $LIST_FILE_PATH
 
-echo "All channels id:"
-for i in $(cat $SAVE_PATH_LIST | jq '.channels[].id')
-do
-    echo "$i" | sed -e 's/^"//' -e 's/"$//'
-done
+all_channel_id_from_list_file $LIST_FILE_PATH
