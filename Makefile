@@ -1,6 +1,8 @@
-clean:
-	rm -rf ./tmp
+clean: clean-cache
 	rm -rf ./data
+
+clean-cache:
+	rm -rf ./tmp
 
 permission:
 	chmod 774 *.sh
@@ -11,4 +13,4 @@ test: permission clear
 cloc:
 	cloc --exclude-ext=json .
 
-.PHONY: test permission clear cloc
+.PHONY: test permission clean cloc clean-cache

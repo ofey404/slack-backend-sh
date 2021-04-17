@@ -53,3 +53,6 @@ done
 
 # extract_users_info_from_users_file $USERS_FILE_PATH
 
+# remove temperary files
+rm -rf ./tmp
+
