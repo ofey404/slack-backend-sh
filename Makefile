@@ -1,7 +1,10 @@
+clean:
+	rm -rf ./tmp
+
 permission:
 	chmod 774 *.sh
 
-test: permission
+test: permission clear
 	find . -name "*_test.sh" -exec "{}" \;
 
-.PHONY: test permission
+.PHONY: test permission clear

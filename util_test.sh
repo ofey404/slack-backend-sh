@@ -13,6 +13,11 @@ then
     echo $API_TOKEN
 fi
 
+assert "join_path 1 2" "1/2"
+assert "join_path 1/ 2/" "1/2/"
+assert "join_path 1/ 2" "1/2"
+assert "join_path 1 2/" "1/2/"
+
 assert "join_arguments_www_form test1=1 test2=2" "test1=1&test2=2"
 assert "join_arguments_www_form" ""
 

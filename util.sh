@@ -1,6 +1,12 @@
 #!/usr/bin/bash
 # Some handy functions.
 
+join_path() {
+    local lhs="$1"
+    local rhs="$2"
+    echo "${lhs:+$lhs/}$rhs" | sed 's#//#/#g'
+}
+
 function join_arguments_www_form() {
     local arguments="$@"
     local ans=""
