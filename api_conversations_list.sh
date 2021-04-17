@@ -18,7 +18,6 @@ function slack_conversations_list_wrapper() {
              --data "$data"\
              https://slack.com/api/conversations.list)
 
-        echo "$resp"
         # If no next cursor, break
         if [[ "\"\"" == `echo "$resp" | jq ".response_metadata.next_cursor"` ]]; then
             break

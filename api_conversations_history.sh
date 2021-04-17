@@ -17,6 +17,7 @@ function slack_conversations_history_wrapper() {
     # Write response to tmp files
     mkdir -p ./tmp
     local filepath_prefix="./tmp/conversations_history_${channel}_$(date +%Y-%m-%d-%H-%M-%S)"
+    # TODO: catch none 0 return value
     get_resp_to_tmp_files $api_token $channel $filepath_prefix
 
     # glue tmp files together.
@@ -103,7 +104,7 @@ function glue_tmp_files() {
     for path in $(ls_relative_path_natural_sort ${tmp_dir} | grep ${filepath_prefix})
     do
         jq -s '{channel: .[0].channel, messages: (.[0].messages + .[1].messages) }' $output_filepath $path > $output_tmpfile
-        mv $output_tmpfile $output_filepath
+        cp $output_tmpfile $output_filepath
     done
 
     return 0

@@ -46,6 +46,12 @@ function init_parameter() {
     return 0
 }
 
+function channel_name_from_id() {
+    local channel_id="$1"
+    local list_file_path="$2"
+
+    cat "$list_file_path" | jq ".channels[] | select(.id == \"$channel_id\")" | jq --raw-output '.name'
+}
 
 function all_channel_id_from_list_file() {
     local list_file_path=$1

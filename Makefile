@@ -1,5 +1,6 @@
 clean:
 	rm -rf ./tmp
+	rm -rf ./data
 
 permission:
 	chmod 774 *.sh
@@ -7,4 +8,7 @@ permission:
 test: permission clear
 	find . -name "*_test.sh" -exec "{}" \;
 
-.PHONY: test permission clear
+cloc:
+	cloc --exclude-ext=json .
+
+.PHONY: test permission clear cloc
