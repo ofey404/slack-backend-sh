@@ -51,8 +51,7 @@ do
     wait $pid
 done
 
-# extract_users_info_from_users_file $USERS_FILE_PATH
+# get replies according to conversation data
 
-# remove temperary files
-rm -rf ./tmp
+rm -rf ./tmp  # to debug, comment this line
 

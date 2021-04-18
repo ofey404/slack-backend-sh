@@ -18,11 +18,11 @@ function slack_conversations_history_wrapper() {
     mkdir -p ./tmp
     local filepath_prefix="./tmp/conversations_history_${channel}_$(date +%Y-%m-%d-%H-%M-%S)"
     # TODO: catch none 0 return value
-    get_resp_to_tmp_files $api_token $channel $filepath_prefix
+    history_get_resp_to_tmp_files $api_token $channel $filepath_prefix
 
     # glue tmp files together.
     local output_filepath="$filepath_prefix.output.tmp"
-    glue_tmp_files $channel $filepath_prefix $output_filepath
+    history_glue_tmp_files $channel $filepath_prefix $output_filepath
 
     echo $output_filepath
     return 0
@@ -35,7 +35,7 @@ function slack_conversations_history_wrapper() {
 #   - ./tmp/resp.1.tmp
 #   - ./tmp/resp.2.tmp
 #   - ./tmp/resp.3.tmp
-function get_resp_to_tmp_files() {
+function history_get_resp_to_tmp_files() {
     local api_token="$1"
     local channel="$2"
     local filepath_prefix="$3"
@@ -90,7 +90,7 @@ function get_resp_to_tmp_files() {
 #     "channel": "$channel",
 #     "messages": []
 #   }
-function glue_tmp_files() {
+function history_glue_tmp_files() {
     local channel="$1"
     local filepath_prefix="$2"
     local output_filepath="$3"

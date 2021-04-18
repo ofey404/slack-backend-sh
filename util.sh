@@ -54,11 +54,20 @@ function channel_name_from_id() {
 }
 
 function all_channel_id_from_list_file() {
-    local list_file_path=$1
+    local list_file_path="$1"
     for i in $(cat $list_file_path | jq '.channels[].id')
     do
         echo "$i" | sed -e 's/^"//' -e 's/"$//'
     done
     return 0
+}
+
+function reply_count() {
+    local history_file_path="$1"
+
+    if [[ -z "$history_file_path" ]]; then
+        return 1
+    fi
+    cat $history_file_path | jq 'reduce .messages[] as $item (0; . + if ($item | has("reply_count")) then 1 else 0 end)'
 }
 
