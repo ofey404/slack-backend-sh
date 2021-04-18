@@ -58,7 +58,7 @@ function history_get_resp_to_tmp_files() {
 #   }
 function history_glue_tmp_files() {
     local channel="$1"
-    local filepath_prefix="$2"
+    local tmp_filepath_prefix="$2"
     local output_filepath="$3"
 
     # Another magic here... I still don't find the correct way
@@ -71,7 +71,7 @@ function history_glue_tmp_files() {
 
     # Hack! ref definition of `glue_tmp_files`
     _jq_command_arr=( jq -s '{channel: .[0].channel, messages: (.[0].messages + .[1].messages) }' )
-    glue_tmp_files $filepath_prefix \
+    glue_tmp_files $tmp_filepath_prefix \
                    $output_filepath \
                    $initial_output_file_content
     return 0

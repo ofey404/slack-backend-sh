@@ -10,7 +10,7 @@ source api_conversations_list.sh
 source api_users_list.sh
 source api_conversations_join.sh
 source api_conversations_history.sh
-
+source api_conversations_replies.sh
 
 API_TOKEN=$(init_parameter API_TOKEN)
 SAVE_PATH=$(init_parameter SAVE_PATH ./data)

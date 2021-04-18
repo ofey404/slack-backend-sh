@@ -36,7 +36,7 @@ function get_resp_to_tmp_files() {
         fi
 
         # if not ok
-        if ! $(echo $resp | jq '.ok'); then
+        if [[ "$(echo $resp | jq '.ok')" != true ]]; then
             echo "ERROR: conversations.history on channel $channel not ok, response $resp" 1>&2
             return 1
         fi
@@ -46,7 +46,7 @@ function get_resp_to_tmp_files() {
         echo $resp | jq > $tmp_file_name
 
         # if no more data, break
-        if ! $(echo $resp | jq '.has_more'); then
+        if [[ $(echo $resp | jq '.has_more') != true ]]; then
             break
         fi
 

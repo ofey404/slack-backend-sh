@@ -2,6 +2,7 @@
 # Interacting with slack api.
 
 source util.sh
+source slack.sh
 
 # conversation.replies
 # https://api.slack.com/methods/conversations.replies
@@ -17,16 +18,33 @@ function slack_conversations_replies_wrapper() {
 
     # Write response to tmp files
     mkdir -p ./tmp
-    local filepath_prefix="./tmp/conversations_replies_${channel}_${ts}_$(date +%Y-%m-%d-%H-%M-%S)"
-    # TODO: catch none 0 return value
-    replies_get_resp_to_tmp_files $api_token $channel $filepath_prefix
+    local tmp_filepath_prefix="./tmp/conversations_replies_${channel}_${ts}_$(date +%Y-%m-%d-%H-%M-%S)"
+
+    get_resp_to_tmp_files "https://slack.com/api/conversations.replies" \
+                          $api_token \
+                          $tmp_filepath_prefix \
+                          "channel=$channel" "ts=$ts"
 
     # glue tmp files together.
-    local output_filepath="$filepath_prefix.output.tmp"
-    replies_glue_tmp_files $channel $filepath_prefix $output_filepath
+    local output_filepath="$tmp_filepath_prefix.output.tmp"
+    replies_glue_tmp_files $channel $ts $tmp_filepath_prefix $output_filepath
 
     echo $output_filepath
     return 0
 }
 
+function replies_glue_tmp_files() {
+    local channel="$1"
+    local ts="$2"
+    local tmp_filepath_prefix="$3"
+    local output_filepath="$4"
 
+    initial_output_file_content="{ \"ts\": \"${ts}\", \"channel\": \"${channel}\", \"messages\": [ ] }" 
+
+    # Hack! ref definition of `glue_tmp_files`
+    _jq_command_arr=( jq -s '{ts: .[0].ts, channel: .[0].channel, messages: (.[0].messages + .[1].messages) }' )
+    glue_tmp_files $tmp_filepath_prefix \
+                   $output_filepath \
+                   $initial_output_file_content
+    return 0
+}
