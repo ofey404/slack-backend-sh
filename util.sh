@@ -71,3 +71,21 @@ function reply_count() {
     cat $history_file_path | jq 'reduce .messages[] as $item (0; . + if ($item | has("reply_count")) then 1 else 0 end)'
 }
 
+
+# ls tmp filename in a natural sort order
+# Natural sort: (1, 2, ... , 11, 12...; not 1, 11, 2, 22, ...)
+# Eg:
+#   $ ls_relative_path_natural_sort ./tmp/
+#   ./tmp/history_C019HHJ7KAQ.1.tmp
+#   ./tmp/history_C019HHJ7KAQ.2.tmp
+#   ./tmp/history_C0194KZD6P8.1.tmp
+#   ./tmp/history_C0194KZD6P8.2.tmp
+function ls_relative_path_natural_sort() {
+    local directory="$1"
+
+    for f in $(ls -v $directory)
+    do
+        echo $(join_path ${directory} ${f})
+    done
+    return 0
+}

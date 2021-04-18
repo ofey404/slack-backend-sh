@@ -1,3 +1,7 @@
+run: clean-cache
+	test -s .env || { echo "no .env file"; exit 1; }
+	./main.sh
+
 clean: clean-cache
 	rm -rf ./data
 
@@ -13,4 +17,4 @@ test: permission clear
 cloc:
 	cloc --exclude-ext=json .
 
-.PHONY: test permission clean cloc clean-cache
+.PHONY: test permission clean cloc clean-cache run
