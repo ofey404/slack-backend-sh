@@ -52,3 +52,13 @@ do
     wait $pid
 done
 
+# get all replies
+for history_filename in $(ls data/ | grep conversation_history)
+do
+    history_path="./data/$history_filename"
+    get_all_replies_from_channel $API_TOKEN $history_path 
+    id=$(cat $history_path | jq --raw-output '.channel')
+    name=$(channel_name_from_id $id ${LIST_FILE_PATH})
+    echo "get replies from channel $name"
+done
+
