@@ -15,6 +15,8 @@ source api_conversations_replies.sh
 API_TOKEN=$(init_parameter API_TOKEN)
 SAVE_PATH=$(init_parameter SAVE_PATH ./data)
 
+rm -rf ./tmp
+
 mkdir -p $SAVE_PATH
 
 LIST_FILE_PATH="$SAVE_PATH/list.json"
@@ -33,10 +35,13 @@ join_all_channels_from_list_file $API_TOKEN $LIST_FILE_PATH > /dev/null
 function get_history() {
     local channel_id="$1"
 
-    output_filepath=$(slack_conversations_history_wrapper $API_TOKEN $channel_id)
-    cp "$output_filepath" "$SAVE_PATH/conversation_history_${channel_id}.json"
+    oldest=$(cat "$SAVE_PATH/conversations_history_${channel_id}.json" | jq --raw-output '.messages[0].ts')
+
+    output_filepath=$(slack_conversations_history_wrapper $API_TOKEN $channel_id "oldest=$oldest")
+    cp "$output_filepath" "$SAVE_PATH/conversations_history_${channel_id}.json.tmp"
     echo "get history of id $channel_id, channel $(channel_name_from_id ${channel_id} ${LIST_FILE_PATH})"
 }
+
 
 i=1
 pids=()
@@ -53,12 +58,30 @@ do
 done
 
 # get all replies
-for history_filename in $(ls data/ | grep conversation_history)
+for tmp_history_filename in $(ls $SAVE_PATH | egrep '^conversations_history_.+?\.json\.tmp$')
 do
-    history_path="./data/$history_filename"
+    history_path="./data/$tmp_history_filename"
     get_all_replies_from_channel $API_TOKEN $history_path 
     id=$(cat $history_path | jq --raw-output '.channel')
     name=$(channel_name_from_id $id ${LIST_FILE_PATH})
     echo "get replies from channel $name"
 done
 
+# TODO: merge replies and histories.
+for history_filename in $(ls data/ | egrep '^conversations_history_.+?.json$')
+do
+    history_path="./data/$history_filename"
+    jq -s '{channel: .[0].channel, messages: (.[1].messages + .[0].messages) }' "$history_path" "$history_path.tmp" > "$history_path.tmp.output"
+    mv "$history_path.tmp.output" "$history_path"
+    rm "$history_path.tmp"
+done
+
+
+for replies_filename in $(ls data/ | egrep '^conversations_replies_.+?.json$')
+do
+    replies_path="./data/$replies_filename"
+
+    jq -s '{channel: .[0].channel, reply_threads: (.[0].reply_threads + .[1].reply_threads) }' "$replies_path" "$replies_path.tmp" > "$replies_path.tmp.output"
+    mv "$replies_path.tmp.output" "$replies_path"
+    rm "$replies_path.tmp"
+done

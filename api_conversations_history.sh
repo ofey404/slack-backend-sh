@@ -19,7 +19,7 @@ function slack_conversations_history_wrapper() {
     mkdir -p ./tmp
     local tmp_filepath_prefix="./tmp/conversations_history_${channel}_$(date +%Y-%m-%d-%H-%M-%S)"
     # TODO: catch none 0 return value
-    history_get_resp_to_tmp_files $api_token $channel $tmp_filepath_prefix
+    history_get_resp_to_tmp_files $api_token $channel $tmp_filepath_prefix $optional_arguments
 
     # glue tmp files together.
     local output_filepath="$tmp_filepath_prefix.output.tmp"
@@ -40,12 +40,14 @@ function history_get_resp_to_tmp_files() {
     local api_token="$1"
     local channel="$2"
     local tmp_filepath_prefix="$3"
+    local optional_arguments="${@:4}"
     
     local history_api_link="https://slack.com/api/conversations.history"
     get_resp_to_tmp_files $history_api_link \
                           $api_token \
                           $tmp_filepath_prefix \
-                          "channel=$channel"
+                          "channel=$channel" \
+                          $optional_arguments
 }
 
 

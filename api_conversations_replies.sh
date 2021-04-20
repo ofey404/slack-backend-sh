@@ -24,7 +24,7 @@ function get_all_replies_from_channel() {
     done
 
     local all_replies_prefix="./tmp/conversations_replies_all_${channel}"
-    local output_filepath="./data/conversations_replies_${channel}.json"
+    local output_filepath="./data/conversations_replies_${channel}.json.tmp"
 
     initial_output_file_content="{ \"channel\": \"${channel}\", \"reply_threads\": [ ] }"
     _jq_command_arr=( jq -s '{channel: .[0].channel, reply_threads: (.[0].reply_threads + [ .[1] ])}' )
