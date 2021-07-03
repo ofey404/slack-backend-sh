@@ -19,13 +19,22 @@ jobs:
           API_TOKEN: ${{ secrets.API_TOKEN_SLACK }}
         run: make run
 
+      - name: Clone from data repo
+        uses: actions/checkout@v2
+        with:
+          repository: 'ofey404/FDUCSLG-slack-backup-repo'
+          path: 'data-repo'
+
+      - name: Update from data repo
+        run: [ -f "data-repo/data" ] && cp -r data-repo/data data/
+
       - name: update-data
         uses: dmnemec/copy_file_to_another_repo_action@main
         env:
           API_TOKEN_GITHUB: ${{ secrets.API_TOKEN_GITHUB }}
         with:
           source_file: 'data/'
-          destination_repo: 'ofey404/FDUCSLG-slack-backup-repo '
+          destination_repo: 'ofey404/FDUCSLG-slack-backup-repo'
           destination_folder: ''
           user_email: 'ofey404@gmail.com'
           user_name: 'Ofey Chan'
