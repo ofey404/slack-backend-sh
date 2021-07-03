@@ -14,11 +14,6 @@ jobs:
       - name: Check out repository code
         uses: actions/checkout@v2
 
-      - name: Run script
-        env:
-          API_TOKEN: ${{ secrets.API_TOKEN_SLACK }}
-        run: make run
-
       - name: Clone from data repo
         uses: actions/checkout@v2
         with:
@@ -27,6 +22,12 @@ jobs:
 
       - name: Update from data repo
         run: '[ -f "data-repo/data" ] && cp -r data-repo/data data/'
+
+
+      - name: Run script
+        env:
+          API_TOKEN: ${{ secrets.API_TOKEN_SLACK }}
+        run: make run
 
       - name: update-data
         uses: dmnemec/copy_file_to_another_repo_action@main
