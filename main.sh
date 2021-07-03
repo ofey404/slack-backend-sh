@@ -12,8 +12,14 @@ source api_conversations_join.sh
 source api_conversations_history.sh
 source api_conversations_replies.sh
 
-API_TOKEN=$(init_parameter API_TOKEN)
-SAVE_PATH=$(init_parameter SAVE_PATH ./data)
+# Set api token and save path from command line, if possible.
+if [[ -z "$API_TOKEN" ]]; then
+    API_TOKEN=$(init_parameter API_TOKEN)
+fi
+
+if [[ -z "$SAVE_PATH" ]]; then
+    SAVE_PATH=$(init_parameter SAVE_PATH ./data)
+fi
 
 rm -rf ./tmp
 
@@ -67,7 +73,7 @@ do
     echo "get replies from channel $name"
 done
 
-# TODO: merge replies and histories.
+# merge replies and histories.
 for history_filename in $(ls data/ | egrep '^conversations_history_.+?.json$')
 do
     history_path="./data/$history_filename"

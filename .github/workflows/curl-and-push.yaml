@@ -1,0 +1,32 @@
+name: Create and push File
+
+on: push
+
+jobs:
+  env-create-and-push:
+    runs-on: ubuntu-latest
+    steps:
+      - run: sudo apt-get update
+      - run: sudo apt-get install curl jq
+      - run: curl --version
+      - run: jq --version
+
+      - name: Check out repository code
+        uses: actions/checkout@v2
+
+      - name: Run script
+        env:
+          API_TOKEN: ${{ secrets.API_TOKEN_SLACK }}
+        run: make run
+
+      - name: update-data
+        uses: dmnemec/copy_file_to_another_repo_action@main
+        env:
+          API_TOKEN_GITHUB: ${{ secrets.API_TOKEN_GITHUB }}
+        with:
+          source_file: 'data/'
+          destination_repo: 'ofey404/FDUCSLG-slack-backup-repo '
+          destination_folder: ''
+          user_email: 'ofey404@gmail.com'
+          user_name: 'Ofey Chan'
+          commit_message: 'Update data'
