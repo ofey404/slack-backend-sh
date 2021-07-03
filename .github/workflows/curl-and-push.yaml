@@ -26,7 +26,7 @@ jobs:
           path: 'data-repo'
 
       - name: Update from data repo
-        run: [ -f "data-repo/data" ] && cp -r data-repo/data data/
+        run: '[ -f "data-repo/data" ] && cp -r data-repo/data data/'
 
       - name: update-data
         uses: dmnemec/copy_file_to_another_repo_action@main
