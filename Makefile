@@ -1,5 +1,4 @@
 run:
-	test -s .env || { echo "no .env file"; exit 1; }
 	./main.sh
 
 clean:
